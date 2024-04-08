@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+    <h1>ICI ADMIN</h1>
+    <a href="{{ path('app_admin_products') }}">VIEW ALL PRODUCTS</a>
+    <a href="{{ path('app_admin_product_create') }}">CREATE NEW PRODUCT</a>
+{% endblock %}

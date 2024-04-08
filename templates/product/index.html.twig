@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+    <h1>ALL PRODUCTS</h1>
+    <a href="{{ path('app_admin_product_create') }}">CREATE NEW PRODUCT</a>
+    {% for product in products %}
+        <div style="border: black 1px solid; margin: 10px; padding: 5px">
+            <h4>{{ product.name }}</h4>
+            <p>{{ product.price }} €</p>
+            {% if product.image is not null %}
+            <div>
+                <img src="{{ vich_uploader_asset(product.image,'imageFile') }}">
+            </div>
+            {% endif %}
+            <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}">EDIT</a>
+            <a href="{{ path('app_admin_image_product', {'id': product.id}) }}">IMAGE</a>
+            <a href="{{ path('app_admin_product_delete', {'id': product.id}) }}">DELETE</a>
+        </div>
+    {% endfor %}
+{% endblock %}

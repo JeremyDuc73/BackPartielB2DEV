@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ImageController!{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5 mb-5">Image of : {{ product.name }}</h1>
+    {% if product.image is not null %}
+    <div class="mb-4">
+        <img src="{{ vich_uploader_asset(product.image, 'imageFile') }}" alt="">
+        <a href="{{ path('app_admin_image_product_delete', {id:product.image.id}) }}">Delete</a>
+    </div>
+    {% endif %}
+    {{ form_start(formImage, {'action': path('app_admin_image_product_add', {id:product.id}), 'method': 'POST'}) }}
+    {{ form_widget(formImage.imageFile)}}
+    <button type="submit" class="btn btn-success mt-4">ADD IMAGE</button>
+    {{ form_end(formImage) }}
+    <a href="{{ path('app_admin_products') }}" class="btn btn-primary mt-4">RETURN TO PRODUCTS</a>
+{% endblock %}

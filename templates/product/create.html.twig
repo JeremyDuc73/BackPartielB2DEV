@@ -1,0 +1,10 @@
+{% block title %}Create Product{% endblock %}
+
+{% block body %}
+    <h1>Add a product</h1>
+    {{ form_start(productForm) }}
+    {{ form_row(productForm.name) }}
+    {{ form_row(productForm.price) }}
+    <button type="submit">SUBMIT</button>
+    {{ form_end(productForm) }}
+{% endblock %}
