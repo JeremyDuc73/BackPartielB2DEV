@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!{% endblock %}
+
+{% block body %}
+<h1>ORDERS</h1>
+
+    {% for order in orders %}
+        <p>{{ order.id }}</p>
+        <p>{{ order.profile.ofUser.email }}</p>
+        <ul>
+            {% for item in order.orderItems %}
+                <li>{{ item.product.name }}</li>
+            {% endfor %}
+        </ul>
+
+
+    {% endfor %}
+{% endblock %}

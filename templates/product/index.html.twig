@@ -17,6 +17,7 @@
             <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}">EDIT</a>
             <a href="{{ path('app_admin_image_product', {'id': product.id}) }}">IMAGE</a>
             <a href="{{ path('app_admin_product_delete', {'id': product.id}) }}">DELETE</a>
+            <a href="{{ path('app_admin_product_qrcode', {'name': product.name}) }}">QRCODE</a>
         </div>
     {% endfor %}
 {% endblock %}

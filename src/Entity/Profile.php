@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
@@ -19,6 +21,17 @@ class Profile
     #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $ofUser = null;
+
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'profile', orphanRemoval: true)]
+    private Collection $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,6 +58,36 @@ class Profile
     public function setOfUser(User $ofUser): static
     {
         $this->ofUser = $ofUser;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getProfile() === $this) {
+                $order->setProfile(null);
+            }
+        }
 
         return $this;
     }

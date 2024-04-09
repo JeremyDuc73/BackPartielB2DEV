@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Profile;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,10 +32,8 @@ class RegistrationController extends AbstractController
         );
         $exists = $repo->findOneBy(["email" => $user->getEmail()]);
         if (!$exists){
-//            $profile = new Profile();
-//            $currentDate = new \DateTimeImmutable();
-//            $profile->setCreatedAt($currentDate);
-//            $user->setProfile($profile);
+            $profile = new Profile();
+            $user->setProfile($profile);
             $entityManager->persist($user);
             $entityManager->flush();
             return $this->json($user, 200, [], ['groups'=>'user:read']);

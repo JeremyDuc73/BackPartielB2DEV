@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Service\QrCodeService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ProductController extends AbstractController
 {
     #[Route('/admin/products', name: 'app_admin_products')]
-    public function listAdmin(ProductRepository $repository)
+    public function list(ProductRepository $repository)
     {
         $products = $repository->findAll();
         return $this->render('product/index.html.twig', [
@@ -24,7 +27,7 @@ class ProductController extends AbstractController
 
     #[Route('/admin/product/create', name: 'app_admin_product_create', priority: 2)]
     #[Route('/admin/product/edit/{id}', name: 'app_admin_product_edit', priority: 2)]
-    public function create(Request $request, EntityManagerInterface $manager, Product $product=null)
+    public function create(Request $request, EntityManagerInterface $manager, Product $product=null, QrCodeService $service)
     {
         $edit =false;
         if ($product){
@@ -36,6 +39,8 @@ class ProductController extends AbstractController
         $productForm = $this->createForm(ProductType::class, $product);
         $productForm->handleRequest($request);
         if ($productForm->isSubmitted() && $productForm->isValid()){
+            $qrCode = $service->generateQrCode($product->getName());
+            $product->setQrCode($qrCode);
             $manager->persist($product);
             $manager->flush();
             return $this->redirectToRoute('app_admin_products');
@@ -51,5 +56,23 @@ class ProductController extends AbstractController
         $manager->remove($product);
         $manager->flush();
         return $this->redirectToRoute('app_admin_products');
+    }
+
+    #[Route('/api/product/{name}', methods: ['GET'])]
+    public function displayOneByQrCode(ProductRepository $productRepository, Product $product)
+    {
+        $linkedProduct = $productRepository->findOneBy(['name'=>$product->getName()]);
+        return $this->json($linkedProduct, 200);
+    }
+
+    #[Route('/admin/product/{name}', name: 'app_admin_product_qrcode')]
+    public function displayQrCode(ProductRepository $repository, Product $product, Pdf $pdf)
+    {
+        $linkedProduct = $repository->findOneBy(['name'=>$product->getName()]);
+        $qrcode = $this->renderView('product/qrcode.html.twig', ['product'=>$linkedProduct]);
+        return new PdfResponse(
+            $pdf->getOutputFromHtml($qrcode),
+            $linkedProduct->getName().'.pdf'
+        );
     }
 }

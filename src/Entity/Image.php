@@ -6,6 +6,7 @@ use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
@@ -18,9 +19,11 @@ class Image implements Serializable
     private ?int $id = null;
 
     #[Vich\UploadableField(mapping: 'appimages', fileNameProperty: 'imageName', size: 'imageSize')]
+
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['cart', 'display'])]
     private ?string $imageName = null;
 
     #[ORM\Column(nullable: true)]
