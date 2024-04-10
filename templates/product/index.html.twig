@@ -3,21 +3,23 @@
 {% block title %}Hello ProductController!{% endblock %}
 
 {% block body %}
-    <h1>ALL PRODUCTS</h1>
-    <a href="{{ path('app_admin_product_create') }}">CREATE NEW PRODUCT</a>
+    <h1 class="mt-4 mb-3">ALL PRODUCTS</h1>
+    <a class="btn btn-success" href="{{ path('app_admin_product_create') }}">CREATE NEW PRODUCT</a>
     {% for product in products %}
-        <div style="border: black 1px solid; margin: 10px; padding: 5px">
-            <h4>{{ product.name }}</h4>
-            <p>{{ product.price }} €</p>
+        <div class="card mb-3 mt-3" style="width: 25rem;">
             {% if product.image is not null %}
-            <div>
-                <img src="{{ vich_uploader_asset(product.image,'imageFile') }}">
-            </div>
+                <img src="{{ vich_uploader_asset(product.image,'imageFile') }}" class="card-img-top">
             {% endif %}
-            <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}">EDIT</a>
-            <a href="{{ path('app_admin_image_product', {'id': product.id}) }}">IMAGE</a>
-            <a href="{{ path('app_admin_product_delete', {'id': product.id}) }}">DELETE</a>
-            <a href="{{ path('app_admin_product_qrcode', {'name': product.name}) }}">QRCODE</a>
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.price }}</p>
+                <div>
+                    <a class="btn btn-warning" href="{{ path('app_admin_product_edit', {'id': product.id}) }}">EDIT</a>
+                    <a class="btn btn-primary" href="{{ path('app_admin_image_product', {'id': product.id}) }}">IMAGE</a>
+                    <a class="btn btn-danger" href="{{ path('app_admin_product_delete', {'id': product.id}) }}">DELETE</a>
+                    <a class="btn btn-primary" href="{{ path('app_admin_product_qrcode', {'name': product.name}) }}">QRCODE</a>
+                </div>
+            </div>
         </div>
     {% endfor %}
 {% endblock %}
