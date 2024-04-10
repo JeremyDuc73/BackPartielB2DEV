@@ -62,7 +62,7 @@ class ProductController extends AbstractController
     public function displayOneByQrCode(ProductRepository $productRepository, Product $product)
     {
         $linkedProduct = $productRepository->findOneBy(['name'=>$product->getName()]);
-        return $this->json($linkedProduct, 200);
+        return $this->json($linkedProduct, 200, [], ['groups'=>'display']);
     }
 
     #[Route('/admin/product/{name}', name: 'app_admin_product_qrcode')]

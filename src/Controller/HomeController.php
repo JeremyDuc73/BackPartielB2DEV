@@ -15,4 +15,9 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    #[Route('/api/profile', methods: ['GET'])]
+    public function profile()
+    {
+        return $this->json($this->getUser()->getProfile(), 200, [], ['groups'=>'profile']);
+    }
 }

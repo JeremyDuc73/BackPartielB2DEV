@@ -37,7 +37,6 @@ class Product
     private Collection $orderItems;
 
     #[ORM\Column(length: 3000, nullable: true)]
-    #[Groups(['display'])]
     private ?string $qrCode = null;
 
     public function __construct()
